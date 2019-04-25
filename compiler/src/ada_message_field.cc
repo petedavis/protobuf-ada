@@ -143,12 +143,11 @@ namespace google {
 
 	// ==================================================================================
 	void MessageFieldGenerator::GenerateMergeFromCodedInputStream(io::Printer* printer) const {
-	  // <PATCH>
-	  /* 	  if (descriptor_->type() == FieldDescriptor::TYPE_MESSAGE) { */
-	  /* 	    printer->Print(variables_,"The_Coded_Input_Stream.Read_Message (The_Message.Get_$name$.all);\n"); */
-	  /* 	  } else { */
-	  /* 	    // TODO: implement handling of groups? */
-	  /* 	  } */
+	  	  if (descriptor_->type() == FieldDescriptor::TYPE_MESSAGE) {
+	  	    printer->Print(variables_,"The_Coded_Input_Stream.Read_Message (The_Message.Get_$name$.all);\n");
+	  	  } else {
+	  	    // TODO: implement handling of groups?
+	  	  }
 	}
 
 	// ==================================================================================

@@ -37,7 +37,6 @@ project Protoc_Ada is
 
    package Linker is
       for Switches ("c++") use ("-l" & "protoc",
-                                "-l" & "protobuf",
                                 "-l" & "protobuf");
    end Linker;
 

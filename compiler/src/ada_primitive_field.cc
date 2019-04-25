@@ -119,11 +119,10 @@ namespace google {
 	    (*variables)["default"] = DefaultValue(descriptor);
 	    (*variables)["tag"] = SimpleItoa(internal::WireFormat::MakeTag(descriptor));
 
-	    // <PATCH>
-	    /* 	    int fixed_size = FixedSize(descriptor->type()); */
-/* 	    if (fixed_size != -1) { */
-/* 	      (*variables)["fixed_size"] = SimpleItoa(fixed_size); */
-/* 	    } */
+	    	    int fixed_size = FixedSize(descriptor->type());
+	    if (fixed_size != -1) {
+	      (*variables)["fixed_size"] = SimpleItoa(fixed_size);
+	    }
 	  }
 
 	} // namespace
@@ -303,7 +302,7 @@ namespace google {
 	  printer->Print(variables_, "declare\n");
 	  printer->Print(variables_, "   Data_Size : Google.Protobuf.Wire_Format.PB_Object_Size := 0;\n");
 	  printer->Print(variables_, "begin\n");
-	  int fixed_size = 0 ; // <PATCH> FixedSize(descriptor_->type());
+	  int fixed_size = FixedSize(descriptor_->type());
 	  if (fixed_size == -1) {
 	    printer->Print(variables_, "   for E of The_Message.$name$ loop\n");
 	    printer->Print(variables_, "      Data_Size := Data_Size +  Google.Protobuf.IO.Coded_Output_Stream.Compute_$declared_type$_Size_No_Tag (E);\n");

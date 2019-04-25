@@ -53,8 +53,8 @@ namespace google {
 	  (*variables)["index"] = SimpleItoa(descriptor->index());
 	  (*variables)["number"] = SimpleItoa(descriptor->number());
 	  (*variables)["packagename"] = AdaPackageName(FieldScope(descriptor));
-	  // (*variables)["declared_type"] = DeclaredTypePrimitiveOperationName(descriptor->type()); <PATCH>
-	  // (*variables)["tag_size"] = SimpleItoa(internal::WireFormat::TagSize(descriptor->number(), descriptor->type())); <PATCH>
+	  (*variables)["declared_type"] = DeclaredTypePrimitiveOperationName(descriptor->type());
+	  (*variables)["tag_size"] = SimpleItoa(internal::WireFormat::TagSize(descriptor->number(), descriptor->type()));
 	}
 
 	// =========================================================================================
