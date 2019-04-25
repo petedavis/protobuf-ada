@@ -32,3 +32,4 @@ w.py
 *.pyc
 protobuff*
 default.gpr
+_test_

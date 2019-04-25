@@ -84,38 +84,38 @@ namespace google {
 	void EnumGenerator::GenerateDefinition(io::Printer* printer) {
 	  // Ada requires that enumeration constant values are defined in an ascending
 	  // order. We must therefore sort enumeration constants by value.
-	  scoped_array<const EnumValueDescriptor*> ordered_values(
-								  SortEnumConstantsByValue(descriptor_));
-
-	  printer->Print("type $name$ is (", "name", descriptor_->name());
+	  scoped_array<const EnumValueDescriptor*> ordered_values(SortEnumConstantsByValue(descriptor_));
+	  std::map<std::string, std::string> vars;
+	  vars["name"] = descriptor_->name();
+	  printer->Print(vars,"type $name$ is (");
 	  for (int i = 0; i < descriptor_->value_count(); i++) {
-	    printer->Print("$literal$", "literal", ordered_values[i]->name());
+	    vars["literal"] = ordered_values[i]->name();
+	    printer->Print(vars,"$literal$" );
 
 	    // More enumeration literals follow?
 	    if (i != descriptor_->value_count() - 1) {
-	      printer->Print(", ");
+	      printer->Print(vars,", ");
 	    }
 	  }
-	  printer->Print(");\n");
-
-	  printer->Print("for $name$'Size use 32;\n", "name", EnumTypeName(descriptor_, false));
-	  printer->Print("for $name$ use (", "name", descriptor_->name());
+	  printer->Print(vars,");\n");
+          vars["name"] = EnumTypeName(descriptor_, false);
+	  printer->Print(vars,"for $name$'Size use 32;\n");
+          vars["name"] = descriptor_->name();
+	  printer->Print(vars, "for $name$ use (");
 	  for (int i = 0; i < descriptor_->value_count(); i++) {
-	    printer->Print("$constant$ => $value$",
-			   "constant", ordered_values[i]->name(),
-			   "value", SimpleItoa(ordered_values[i]->number()));
+	    vars["constant"]= ordered_values[i]->name();
+	    vars["value"]= SimpleItoa(ordered_values[i]->number());
+	    printer->Print(vars,"$constant$ => $value$");
 
 	    // More constants follow?
 	    if (i != descriptor_->value_count() - 1) {
-	      printer->Print(", ");
+	      printer->Print(vars,", ");
 	    }
 	  }
-	  printer->Print(");\n");
-
-	  printer->Print("function Enumeration_To_PB_Int32 is new Ada.Unchecked_Conversion ($name$, Google.Protobuf.Wire_Format.PB_Int32);\n",
-			 "name", EnumTypeName(descriptor_, false));
-	  printer->Print("function PB_Int32_To_Enumeration is new Ada.Unchecked_Conversion (Google.Protobuf.Wire_Format.PB_Int32, $name$);\n",
-			 "name", EnumTypeName(descriptor_, false));
+	  printer->Print(vars,");\n");
+          vars["name"] = EnumTypeName(descriptor_, false);
+	  printer->Print(vars,"function Enumeration_To_PB_Int32 is new Ada.Unchecked_Conversion ($name$, Google.Protobuf.Wire_Format.PB_Int32);\n");
+	  printer->Print(vars,"function PB_Int32_To_Enumeration is new Ada.Unchecked_Conversion (Google.Protobuf.Wire_Format.PB_Int32, $name$);\n");
 	}
 
 

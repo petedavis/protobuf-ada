@@ -63,7 +63,7 @@ namespace google {
 
 	  // -----------------------------------------------------------------
 	  // parse generator options
-
+	  std::map<std::string, std::string> vars;
 	  // Name a file where we will write a list of generated file names, one
 	  // per line.
 	  string output_list_file;
@@ -106,7 +106,8 @@ namespace google {
 	    scoped_ptr<io::ZeroCopyOutputStream> srclist_raw_output(context->Open(output_list_file));
 	    io::Printer srclist_printer(srclist_raw_output.get(), '$');
 	    for (unsigned long i = 0; i < all_files.size(); i++) {
-	      srclist_printer.Print("$filename$\n", "filename", all_files[i]);
+	      vars["filename"] = all_files[i];
+	      srclist_printer.Print(vars, "$filename$\n");
 	    }
 	  }
 

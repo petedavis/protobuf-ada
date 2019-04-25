@@ -43,7 +43,7 @@ namespace google {
 
 	namespace {
 
-	// ==================================================================================
+	  // ==================================================================================
 	  void SetMessageVariables(const FieldDescriptor* descriptor,
 				   map<string, string>* variables) {
 	    SetCommonFieldVariables(descriptor, variables);
@@ -143,11 +143,12 @@ namespace google {
 
 	// ==================================================================================
 	void MessageFieldGenerator::GenerateMergeFromCodedInputStream(io::Printer* printer) const {
-	  if (descriptor_->type() == FieldDescriptor::TYPE_MESSAGE) {
-	    printer->Print(variables_,"The_Coded_Input_Stream.Read_Message (The_Message.Get_$name$.all);\n");
-	  } else {
-	    // TODO: implement handling of groups?
-	  }
+	  // <PATCH>
+	  /* 	  if (descriptor_->type() == FieldDescriptor::TYPE_MESSAGE) { */
+	  /* 	    printer->Print(variables_,"The_Coded_Input_Stream.Read_Message (The_Message.Get_$name$.all);\n"); */
+	  /* 	  } else { */
+	  /* 	    // TODO: implement handling of groups? */
+	  /* 	  } */
 	}
 
 	// ==================================================================================

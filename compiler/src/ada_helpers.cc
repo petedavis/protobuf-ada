@@ -375,7 +375,8 @@ namespace google {
 	}
 
 	FieldDescriptor::Type GetType(const FieldDescriptor* field) {
-	  return field->type();
+	  return FieldDescriptor::TYPE_INT32; // <PATCH>
+	  // return field->type();
 	}
 
 	AdaType GetAdaType(const FieldDescriptor* field) {
