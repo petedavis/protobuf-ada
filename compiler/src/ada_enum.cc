@@ -38,7 +38,7 @@
 #include <ada_enum.h>
 #include <ada_helpers.h>
 #include <google/protobuf/io/printer.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 #include <algorithm>
 
 namespace google {

@@ -36,7 +36,8 @@
 #include <ada_message.h>
 #include <ada_enum.h>
 #include <google/protobuf/io/printer.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
+
 #include <google/protobuf/wire_format.h>
 #include <ada_helpers.h>
 #include <algorithm>

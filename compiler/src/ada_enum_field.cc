@@ -35,7 +35,7 @@
 #include <ada_enum_field.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/descriptor.pb.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 #include <iostream>
 #include "ada_helpers.h"
 

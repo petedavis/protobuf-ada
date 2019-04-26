@@ -36,7 +36,7 @@
 #include <google/protobuf/stubs/hash.h>
 
 #include <ada_helpers.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 #include <float.h>
 #include <errno.h>
 #include <stdio.h>

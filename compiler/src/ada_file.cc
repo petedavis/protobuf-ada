@@ -38,7 +38,7 @@
 #include <ada_enum.h>
 #include <google/protobuf/descriptor.pb.h>
 #include <google/protobuf/io/printer.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/compiler/code_generator.h>
 

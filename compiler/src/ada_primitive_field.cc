@@ -36,7 +36,7 @@
 #include <ada_helpers.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/wire_format.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 
 #include "ada_enum_field.h"
 
