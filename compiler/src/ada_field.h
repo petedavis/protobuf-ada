@@ -31,16 +31,19 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
+#pragma once
 
 #ifndef GOOGLE_PROTOBUF_COMPILER_ADA_FIELD_H__
 #define GOOGLE_PROTOBUF_COMPILER_ADA_FIELD_H__
-
-#include <map>
-#include <string>
-
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/io/printer.h>
+#include <google/protobuf/wire_format.h>
+#include <map>
+#include <string>
+#undef  PROTOBUF_DEPRECATED
+#include "google/protobuf/port_def.inc"
+
 namespace google {
 
   namespace protobuf {
@@ -136,5 +139,5 @@ namespace google {
     } // namespace compiler
   } // namespace protobuf
 } // namespace google
-
+#include "google/protobuf/port_undef.inc"
 #endif // GOOGLE_PROTOBUF_COMPILER_ADA_FIELD_H__

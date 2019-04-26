@@ -32,10 +32,11 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
+#include <google/protobuf/io/printer.h>
+#include <google/protobuf/descriptor.h>
+
 #include <ada_string_field.h>
 #include <ada_helpers.h>
-#include <google/protobuf/io/printer.h>
-#include <google/protobuf/descriptor.pb.h>
 
 namespace google {
   namespace protobuf {

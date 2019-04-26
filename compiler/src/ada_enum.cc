@@ -31,15 +31,13 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
-
-#include <set>
-#include <map>
-
-#include <ada_enum.h>
-#include <ada_helpers.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/strutil.h>
+#include <set>
+#include <map>
 #include <algorithm>
+#include <ada_enum.h>
+#include <ada_helpers.h>
 
 namespace google {
   namespace protobuf {

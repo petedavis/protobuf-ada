@@ -31,14 +31,17 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
+#pragma once
 
 #ifndef GOOGLE_PROTOBUF_COMPILER_ADA_MESSAGE_FIELD_H__
 #define GOOGLE_PROTOBUF_COMPILER_ADA_MESSAGE_FIELD_H__
 
+#include <google/protobuf/io/printer.h>
 #include <map>
 #include <string>
-
 #include <ada_field.h>
+#include <ada_helpers.h>
+#include "google/protobuf/port_def.inc"
 
 namespace google {
   namespace protobuf {
@@ -95,5 +98,5 @@ namespace google {
     } // namespace compiler
   } // namespace protobuf
 } // namespace google
-
+#include "google/protobuf/port_undef.inc"
 #endif // GOOGLE_PROTOBUF_COMPILER_ADA_MESSAGE_FIELD_H__

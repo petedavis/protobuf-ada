@@ -32,14 +32,15 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
+#pragma once
 #ifndef GOOGLE_PROTOBUF_COMPILER_ADA_ENUM_H__
 #define GOOGLE_PROTOBUF_COMPILER_ADA_ENUM_H__
 
 #include <string>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
-
-
+#undef  PROTOBUF_DEPRECATED
+#include <google/protobuf/port_def.inc>
 namespace google {
   namespace protobuf {
     namespace compiler {
@@ -63,4 +64,5 @@ namespace google {
   }  // namespace protobuf
 
 }  // namespace google
+#include "google/protobuf/port_undef.inc"
 #endif  // GOOGLE_PROTOBUF_COMPILER_ADA_ENUM_H__

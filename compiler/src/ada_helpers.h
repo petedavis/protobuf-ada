@@ -33,13 +33,18 @@
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
 
+#pragma once
 
 #ifndef GOOGLE_PROTOBUF_COMPILER_ADA_HELPERS_H__
 #define GOOGLE_PROTOBUF_COMPILER_ADA_HELPERS_H__
 
 #include <string>
-#include <google/protobuf/descriptor.pb.h>
 #include <google/protobuf/descriptor.h>
+#include <google/protobuf/stubs/hash.h>
+#include <google/protobuf/stubs/strutil.h>
+#undef  PROTOBUF_DEPRECATED
+
+#include "google/protobuf/port_def.inc"
 
 namespace google {
   namespace protobuf {
@@ -123,4 +128,5 @@ namespace google {
     }  // namespace compiler
   }  // namespace protobuf
 }  // namespace google
+#include "google/protobuf/port_undef.inc"
 #endif  // GOOGLE_PROTOBUF_COMPILER_ADA_HELPERS_H__

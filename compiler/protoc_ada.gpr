@@ -15,6 +15,7 @@ project Protoc_Ada is
          "-Wall",
          "-Wno-sign-compare",
          "-O2",
+         --          "-H",
          "-fPIC", "-DPIC",
          "-DHAVE_CONFIG_H",
          "-DHAVE_PTHREAD=1",
@@ -36,7 +37,8 @@ project Protoc_Ada is
 
 
    package Linker is
-      for Switches ("c++") use ("-l" & "protoc",
+      for Switches ("c++") use ("-static",
+                                "-l" & "protoc",
                                 "-l" & "protobuf");
    end Linker;
 

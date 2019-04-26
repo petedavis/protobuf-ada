@@ -32,15 +32,14 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
-#include <ada_file.h>
-#include <ada_helpers.h>
-#include <ada_message.h>
-#include <ada_enum.h>
-#include <google/protobuf/descriptor.pb.h>
+#include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/strutil.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/compiler/code_generator.h>
+#include <ada_helpers.h>
+#include <ada_enum.h>
+#include <ada_file.h>
 
 namespace google {
   namespace protobuf {

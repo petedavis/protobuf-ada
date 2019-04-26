@@ -32,6 +32,7 @@
 // Author: jonp@google.com (Jon Perlow)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
+#pragma once
 
 #ifndef GOOGLE_PROTOBUF_COMPILER_JAVA_STRING_FIELD_H__
 #define GOOGLE_PROTOBUF_COMPILER_JAVA_STRING_FIELD_H__
@@ -40,7 +41,7 @@
 #include <string>
 
 #include <ada_field.h>
-
+#include "google/protobuf/port_def.inc"
 namespace google {
   namespace protobuf {
     namespace compiler {
@@ -96,4 +97,5 @@ namespace google {
     } // namespace compiler
   } // namespace protobuf
 } // namespace google
+#include "google/protobuf/port_undef.inc"
 #endif  // GOOGLE_PROTOBUF_COMPILER_JAVA_STRING_FIELD_H__

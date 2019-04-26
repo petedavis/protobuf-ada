@@ -32,15 +32,9 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
-#include <google/protobuf/stubs/hash.h>
-#include <ada_message.h>
-#include <ada_enum.h>
-#include <google/protobuf/io/printer.h>
-#include <google/protobuf/stubs/strutil.h>
-
-#include <google/protobuf/wire_format.h>
-#include <ada_helpers.h>
 #include <algorithm>
+#include <ada_message.h>
+
 namespace google {
   namespace protobuf {
     namespace compiler {

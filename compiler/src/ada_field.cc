@@ -31,15 +31,12 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
-
-#include <ada_primitive_field.h>
 #include <ada_enum_field.h>
+#include <ada_field.h>
 #include <ada_message_field.h>
 #include <ada_string_field.h>
-#include <ada_field.h>
 #include <ada_helpers.h>
-#include <google/protobuf/wire_format.h>
-#include <google/protobuf/stubs/strutil.h>
+#include <ada_primitive_field.h>
 
 namespace google {
   namespace protobuf {

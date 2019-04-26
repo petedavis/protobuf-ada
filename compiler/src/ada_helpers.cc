@@ -33,10 +33,7 @@
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
 #include <limits>
-#include <google/protobuf/stubs/hash.h>
-
 #include <ada_helpers.h>
-#include <google/protobuf/stubs/strutil.h>
 #include <float.h>
 #include <errno.h>
 #include <stdio.h>
