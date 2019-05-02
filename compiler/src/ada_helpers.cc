@@ -52,12 +52,14 @@
 #define snprintf _snprintf
 #endif
 
+
 namespace google {
   namespace protobuf {
+    FieldDescriptor::Type FieldDescriptor::type() const { return type_;};
     namespace compiler {
       namespace ada {
 
-	namespace {
+	// namespace {
 
 	  const char* const kKeywordList[] = {"abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
 					      "abstract", "end", "null", "accept", "entry", "select", "access", "exception",
@@ -315,7 +317,7 @@ namespace google {
 	  // -----------------------------------------------------------------------------
 
 
-	} // namespace
+	// } // namespace
 
 	// Escape non-printing characters.
 	string AdaEscape(const string& src) {
