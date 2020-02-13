@@ -34,12 +34,12 @@
 
 #include <set>
 #include <map>
-
 #include <ada_enum.h>
 #include <ada_helpers.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/strutil.h>
 #include <algorithm>
+#include <boost/smart_ptr/scoped_array.hpp>
 
 namespace google {
   namespace protobuf {
@@ -66,7 +66,8 @@ namespace google {
 	    for (int i = 0; i < enum_descriptor->value_count(); i++) {
 	      enum_constant[i] = enum_descriptor->value(i);
 	    }
-	    std::sort(enum_constant, enum_constant + enum_descriptor->value_count(),
+	    std::sort(enum_constant,
+		      enum_constant + enum_descriptor->value_count(),
 		      EnumConstantOrderingByValue());
 	    return enum_constant;
 	  }
@@ -84,7 +85,7 @@ namespace google {
 	void EnumGenerator::GenerateDefinition(io::Printer* printer) {
 	  // Ada requires that enumeration constant values are defined in an ascending
 	  // order. We must therefore sort enumeration constants by value.
-	  scoped_array<const EnumValueDescriptor*> ordered_values(SortEnumConstantsByValue(descriptor_));
+	  boost::scoped_array<const EnumValueDescriptor*> ordered_values = SortEnumConstantsByValue(descriptor_);
 	  std::map<std::string, std::string> vars;
 	  vars["name"] = descriptor_->name();
 	  printer->Print(vars,"type $name$ is (");

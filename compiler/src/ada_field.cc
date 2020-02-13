@@ -40,7 +40,7 @@
 #include <ada_helpers.h>
 #include <google/protobuf/wire_format.h>
 #include <google/protobuf/stubs/strutil.h>
-
+#include <boost/smart_ptr/scoped_ptr.hpp>
 namespace google {
   namespace protobuf {
     namespace compiler {
@@ -65,7 +65,7 @@ namespace google {
 	// =========================================================================================
 	FieldGeneratorMap::FieldGeneratorMap(const Descriptor* descriptor)
 	: descriptor_(descriptor),
-	field_generators_(new scoped_ptr<FieldGenerator>[descriptor->field_count()]) {
+	field_generators_(new boost::scoped_ptr<FieldGenerator>[descriptor->field_count()]) {
 	  // Construct all the FieldGenerators.
 	  for (int i = 0; i < descriptor->field_count(); i++) {
 	    field_generators_[i].reset(MakeGenerator(descriptor->field(i)));

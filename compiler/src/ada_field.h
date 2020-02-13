@@ -37,10 +37,11 @@
 
 #include <map>
 #include <string>
-
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/io/printer.h>
+#include <boost/smart_ptr/scoped_array.hpp>
+
 namespace google {
 
   namespace protobuf {
@@ -126,7 +127,7 @@ namespace google {
 
 	  private:
 	  const Descriptor* descriptor_;
-	  scoped_array<unique_ptr<FieldGenerator> > field_generators_;
+	  boost::scoped_array<unique_ptr<FieldGenerator> > field_generators_;
 
 	  static FieldGenerator* MakeGenerator(const FieldDescriptor* field);
 

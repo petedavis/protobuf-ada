@@ -40,7 +40,6 @@
 #include <google/protobuf/wire_format.h>
 #include <ada_helpers.h>
 #include <algorithm>
-
 namespace google {
   namespace protobuf {
     namespace compiler {
@@ -89,7 +88,7 @@ namespace google {
 	  // already_seen is used to avoid checking the same type multiple times
 	  // (and also to protect against recursion).
 	  static bool HasRequiredFields(const Descriptor* type,
-					hash_set<const Descriptor*>* already_seen) {
+					set<const Descriptor*>* already_seen) {
 	    if (already_seen->count(type) > 0) {
 	      // Since the first occurrence of a required field causes the whole
 	      // function to return true, we can assume that if the type is already
@@ -121,7 +120,7 @@ namespace google {
 
 	  // =========================================================================================
 	  static bool HasRequiredFields(const Descriptor* type) {
-	    hash_set<const Descriptor*> already_seen;
+	    set<const Descriptor*> already_seen;
 	    return HasRequiredFields(type, &already_seen);
 	  }
 
@@ -839,7 +838,7 @@ namespace google {
 	// ===============================================================================================
 	void MessageGenerator::GenerateSerializeWithCachedSizes(io::Printer * printer) {
 	  //TODO: implement handling of extensions.
-	  scoped_array<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
+	  boost::scoped_array<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
 	  printer->Print(vars,
@@ -888,7 +887,7 @@ namespace google {
 	    printer->Print(vars,
 			   "case Google.Protobuf.Wire_Format.Get_Tag_Field_Number (Tag) is\n");
 
-	    scoped_array<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
+	    boost::scoped_array<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
 
 	    for (int i = 0; i < descriptor_->field_count(); i++) {
 	      const FieldDescriptor* field = ordered_fields[i];
@@ -904,9 +903,7 @@ namespace google {
 	      printer->Print(vars,
 			     "if Google.Protobuf.Wire_Format.Get_Tag_Wire_Type (Tag) =\n");
 	      printer->Indent();
-	      // <BUG>
-	      // vars["wiretype"] = kWireTypeNames[internal::WireFormat::WireTypeForField(field)];
-	      vars["wiretype"] = "kalle"; //kWireTypeNames[internal::WireFormat::WireTypeForField(field)];
+	      vars["wiretype"] = kWireTypeNames[internal::WireFormat::WireTypeForField(field)];
 	      printer->Print(vars,
 			     "Google.Protobuf.Wire_Format.$wiretype$ then\n");
 
