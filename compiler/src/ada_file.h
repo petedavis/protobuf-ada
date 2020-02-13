@@ -46,7 +46,7 @@ namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
-
+	using namespace std;
 	class FileGenerator {
 	  public:
 	  explicit FileGenerator(const FileDescriptor* file);

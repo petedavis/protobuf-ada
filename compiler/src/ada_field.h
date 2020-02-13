@@ -46,12 +46,13 @@ namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
+	using namespace std;
 
 	// Helper function: set variables in the map that are the same for all
 	// field code generators.
 	// ['name', 'index', 'number', 'packagename', 'declared_type', 'tag_size'].
 	void SetCommonFieldVariables(const FieldDescriptor* descriptor,
-				     map<string, string>* variables);
+				     std::map<string, string>* variables);
 
 	class FieldGenerator {
 	  public:
@@ -125,7 +126,7 @@ namespace google {
 
 	  private:
 	  const Descriptor* descriptor_;
-	  scoped_array<scoped_ptr<FieldGenerator> > field_generators_;
+	  scoped_array<unique_ptr<FieldGenerator> > field_generators_;
 
 	  static FieldGenerator* MakeGenerator(const FieldDescriptor* field);
 

@@ -1,0 +1,9 @@
+project Protobuf_Cpp is
+   for Languages use ("C++");
+   for Source_Dirs use ("/usr/gnat/include/google/protobuf/io");
+   for Externally_Built use "True";
+   package Naming is
+      for Spec_Suffix ("c++") use ".h";
+      for Body_Suffix ("c++") use ".cc";
+   end Naming;
+end Protobuf_Cpp;

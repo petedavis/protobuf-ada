@@ -1,3 +1,4 @@
+with "protobuf_cpp.gpr";
 project Protoc_Ada is
 
    for Languages use ("C++");
@@ -8,9 +9,14 @@ project Protoc_Ada is
 
    package Builder is
       for Switches ("c++") use ("-j0");
-      for Global_Compilation_Switches ("C++" )use
+      for Executable ("protoc-ada.cc") use "protoc-gen-ada";
+   end Builder;
+
+
+   package Compiler is
+      for Switches ("C++" )use
         ("-g",
-         "-std=c++11",
+         "-std=c++14",
          "-pthread",
          "-Wall",
          "-Wno-sign-compare",
@@ -21,12 +27,6 @@ project Protoc_Ada is
          "-DHAVE_ZLIB=1",
          "-DNDEBUG"
          );
-      for Executable ("protoc-ada.cc") use "protoc-gen-ada";
-   end Builder;
-
-
-   package Compiler is
-      for Switches ("c++") use ("-O0", "-Wall");
    end Compiler;
 
    package Install is
@@ -38,7 +38,7 @@ project Protoc_Ada is
    package Linker is
       for Switches ("c++") use ("-l" & "protoc",
                                 "-l" & "protobuf",
-                                "-l" & "protobuf");
+                                "-static");
    end Linker;
 
    package Naming is

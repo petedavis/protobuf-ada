@@ -44,6 +44,7 @@ namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
+	using namespace std;
 
 	class MessageFieldGenerator : public FieldGenerator {
 	  public:

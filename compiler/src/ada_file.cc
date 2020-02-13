@@ -38,7 +38,7 @@
 #include <ada_enum.h>
 #include <google/protobuf/descriptor.pb.h>
 #include <google/protobuf/io/printer.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/compiler/code_generator.h>
 
@@ -46,7 +46,7 @@ namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
-
+	using namespace std;
 	// =========================================================================================
 	FileGenerator::FileGenerator(const FileDescriptor* file) : file_(file), ada_package_name_(FileAdaPackageName(file)) {}
 
@@ -175,7 +175,7 @@ namespace google {
 	static void GenerateChildPackages(const string& package_dir,
 					  const DescriptorClass* descriptor,
 					  GeneratorContext* context,
-					  vector<string>* file_list,
+					  std::vector<string>* file_list,
 					  const string& name_suffix,
 					  const string& file_suffix,
 					  const string& ada_package,
@@ -192,7 +192,7 @@ namespace google {
 	  filename = filename  + file_suffix;
 	  file_list->push_back(filename);
 
-	  scoped_ptr<io::ZeroCopyOutputStream> output(context->Open(filename));
+	  unique_ptr<io::ZeroCopyOutputStream> output(context->Open(filename));
 	  io::Printer printer(output.get(), '$');
 	  vars["filename"] = descriptor->file()->name();
 	  printer.Print(vars,

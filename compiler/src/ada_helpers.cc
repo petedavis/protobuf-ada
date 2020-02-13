@@ -34,9 +34,9 @@
 
 #include <limits>
 #include <google/protobuf/stubs/hash.h>
-
+#include <hash_set>
 #include <ada_helpers.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 #include <float.h>
 #include <errno.h>
 #include <stdio.h>
@@ -59,7 +59,7 @@ namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
-
+	using namespace std;
 	namespace {
 
 	  const char* const kKeywordList[] = {"abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
@@ -74,15 +74,15 @@ namespace google {
 	  };
 
 	  // =========================================================================================
-	  hash_set<string> MakeKeywordsMap() {
-	    hash_set<string> result;
+	  __gnu_cxx::hash_set<std::string, __gnu_cxx::hash<std::string> > MakeKeywordsMap() {
+	    __gnu_cxx::hash_set<std::string, __gnu_cxx::hash<std::string> > result;
 	    for (long unsigned i = 0; i < GOOGLE_ARRAYSIZE(kKeywordList); i++) {
 	      result.insert(kKeywordList[i]);
 	    }
 	    return result;
 	  }
 
-	  hash_set<string> kKeywords = MakeKeywordsMap();
+	  __gnu_cxx::hash_set<std::string, __gnu_cxx::hash<std::string> > kKeywords = MakeKeywordsMap();
 
 	  // =========================================================================================
 	  string UnderscoresToCapitalizedUnderscoresImpl(const string& input) {
@@ -431,8 +431,7 @@ namespace google {
 		} else if (value != value) {
 		  return "Google.Protobuf.Generated_Message_Utilities.NaN";
 		} else {
-		  return "Google.Protobuf.Wire_Format.PB_Double (" +
-		  SimpleDtoaDecimal(value) + ")";
+		  return "Google.Protobuf.Wire_Format.PB_Double (" + SimpleDtoaDecimal(value) + ")";
 		}
 	      }
 	    case FieldDescriptor::CPPTYPE_FLOAT:

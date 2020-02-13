@@ -41,6 +41,7 @@ namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
+	using namespace std;
 
 	namespace {
 

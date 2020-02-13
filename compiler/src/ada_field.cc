@@ -39,12 +39,13 @@
 #include <ada_field.h>
 #include <ada_helpers.h>
 #include <google/protobuf/wire_format.h>
-#include <strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 
 namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
+	using namespace std;
 
 	// =========================================================================================
 	void SetCommonFieldVariables(const FieldDescriptor* descriptor,
