@@ -126,7 +126,7 @@ namespace google {
 
 	  private:
 	  const Descriptor* descriptor_;
-	  std::vector<unique_ptr<FieldGenerator> > field_generators_;
+	  std::vector<unique_ptr<FieldGenerator>> field_generators_;
 
 	  static FieldGenerator* MakeGenerator(const FieldDescriptor* field);
 

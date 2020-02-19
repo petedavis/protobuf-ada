@@ -1,6 +1,7 @@
+with "libstdcpp.gpr";
 with "protobuf_cpp.gpr";
 project Protoc_Ada is
-
+   type Boolean is ("False", "True");
    for Languages use ("C++");
    for Main use ("protoc-ada.cc");
    for source_Dirs use ("src/**");
@@ -12,6 +13,7 @@ project Protoc_Ada is
       for Executable ("protoc-ada.cc") use "protoc-gen-ada";
    end Builder;
 
+   HAVE_ZLIB : Boolean := "True";
 
    package Compiler is
       for Switches ("C++" )use
@@ -25,9 +27,14 @@ project Protoc_Ada is
          "-fPIC", "-DPIC",
          "-DHAVE_CONFIG_H",
          "-DHAVE_PTHREAD=1",
-         "-DHAVE_ZLIB=1",
+
          "-DNDEBUG"
-         );
+        );
+      case HAVE_ZLIB is
+         when "True" => for Switches ("C++") use Compiler'Switches ("C++") & ("-DHAVE_ZLIB=1");
+         when "False" => null;
+      end case;
+
    end Compiler;
 
    package Install is
@@ -37,8 +44,11 @@ project Protoc_Ada is
 
 
    package Linker is
-      for Switches ("c++") use ("-l" & "protoc",
-                                "-static");
+      for Switches ("c++") use ("-l" & "protobuf",
+                                "-l" & "protoc",
+                                "-l" & "c",
+                                "-l" & "m",
+                                "-l" & "z");
    end Linker;
 
    package Naming is

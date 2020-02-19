@@ -1,4 +1,3 @@
-
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -17,26 +16,21 @@ int main(int argc, char* argv[]) {
   const std::string legacy_name = "protoc-gen-ada";
 
   google::protobuf::compiler::ada::AdaGenerator *ada_generator = new google::protobuf::compiler::ada::AdaGenerator();
-
   ofstream outfile;
   outfile.open("Trace.txt");
   for(int i=0; i<argc; i++) {
     outfile << invocation_basename << endl;
-    outfile <<  legacy_name << endl;
-    if (invocation_basename == legacy_name) {
-      outfile <<  "<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    }else{
-        outfile <<  ">>>>>>>>>>>>>>>>>>>" << endl;
-    };
+    outfile << legacy_name << endl;
   }
-  outfile.close();
 
-//  if (invocation_basename == legacy_name) {
-//     _Trace("5.txt");
-//    cli.RegisterGenerator("--ada_out", &ada_generator, "Generate Ada specification and body.");
-//    _Trace("6.txt");
-//    return cli.Run(argc, argv);
-    //  _tracer("7.txt");
-//  };
-  return google::protobuf::compiler::PluginMain(argc, argv, ada_generator);
+  if (invocation_basename == legacy_name) {
+    cli.RegisterGenerator("--ada_out", ada_generator, "Generate Ada specification and body.");
+    outfile << "invocation_basename == legacy_name";
+    outfile.close();
+    return cli.Run(argc, argv);
+  } else {
+    outfile << "invocation_basename != legacy_name";
+    outfile.close();
+    return google::protobuf::compiler::PluginMain(argc, argv, ada_generator);
+  };
 }

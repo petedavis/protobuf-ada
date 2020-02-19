@@ -3,13 +3,13 @@
 project:=protoc_ada.gpr
 
 all: build test
-build:protoc_ada.gpr
+build:protoc_ada.gpr Makefile.conf
 	${GPRBUILD} -p -P ${project}
 
-uninstall:protoc_ada.gpr
+uninstall:protoc_ada.gpr Makefile.conf
 	${GPRINSTALL} --uninstall ${project}
 
-install:protoc_ada.gpr
+install:protoc_ada.gpr Makefile.conf
 	@${GPRINSTALL} --uninstall ${project} --prefix=${DESTDIR}${prefix} 2>/dev/null >/dev/null ; true
 	${GPRINSTALL} -p -P ${project} --prefix=${DESTDIR}${prefix}
 
@@ -22,8 +22,8 @@ Makefile.conf:Makefile  # <IGNORE>
 gps:  # <IGNORE>
 	${GPS} -P ${project} &
 
-test:
+test: Makefile.conf
 	@rm -rf out *.txt
 	@mkdir out
 	protoc test.proto --python_out=out
-	strace -o trace -f protoc -I ${CURDIR} test.proto --ada_out=out
+	protoc -I ${CURDIR} test.proto --ada_out=out
