@@ -1,6 +1,17 @@
 project Protobuf_Cpp is
    for Languages use ("C++");
-   for Source_Dirs use ("/usr/gnat/include/google/protobuf/io");
+
+   GNAT_HOME        := external ("GNAT_HOME", "/usr/gnat/");
+   PROTOBUF_INCLUDE := external ("PROTOBUF_INCLUDE", GNAT_HOME & "include/google/protobuf/");
+
+   for Source_Dirs use ();
+   for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE);
+   for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE & "io");
+   for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE & "compiler");
+   for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE & "io");
+   for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE & "stubs");
+   for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE & "util");
+
    for Externally_Built use "True";
    package Naming is
       for Spec_Suffix ("c++") use ".h";

@@ -388,7 +388,8 @@ namespace google {
 	  printer->Print(vars,
 			 "---------------------------------------------------------------------------\n"
 			 "--    Inherited functions and procedures from Google.Protobuf.Message    --\n"
-			 "---------------------------------------------------------------------------\n\n");
+			 "---------------------------------------------------------------------------\n"
+			 "\n");
 
 	  GenerateClear(printer);
 	  GenerateCopy(printer);
