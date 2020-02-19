@@ -33,11 +33,13 @@
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
 #include <limits>
+#include <google/protobuf/stubs/hash.h>
 #include <ada_helpers.h>
+#include <google/protobuf/stubs/strutil.h>
+#include <google/protobuf/stubs/logging.h>
 #include <float.h>
 #include <errno.h>
 #include <stdio.h>
-
 #ifdef _WIN32
 // MSVC has only _snprintf, not snprintf.
 //
@@ -52,14 +54,13 @@
 #define snprintf _snprintf
 #endif
 
-
 namespace google {
   namespace protobuf {
-    FieldDescriptor::Type FieldDescriptor::type() const { return type_;};
     namespace compiler {
       namespace ada {
-
-	// namespace {
+	using namespace std;
+//	using namespace google::protobuf
+	namespace {
 
 	  const char* const kKeywordList[] = {"abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
 					      "abstract", "end", "null", "accept", "entry", "select", "access", "exception",
@@ -73,15 +74,15 @@ namespace google {
 	  };
 
 	  // =========================================================================================
-	  hash_set<string> MakeKeywordsMap() {
-	    hash_set<string> result;
+	    set<string> MakeKeywordsMap() {
+	    set<string> result;
 	    for (long unsigned i = 0; i < GOOGLE_ARRAYSIZE(kKeywordList); i++) {
 	      result.insert(kKeywordList[i]);
 	    }
 	    return result;
 	  }
 
-	  hash_set<string> kKeywords = MakeKeywordsMap();
+	  set<std::string> kKeywords = MakeKeywordsMap();
 
 	  // =========================================================================================
 	  string UnderscoresToCapitalizedUnderscoresImpl(const string& input) {
@@ -106,37 +107,6 @@ namespace google {
 	      }
 	    }
 	    return result;
-	  }
-
-	  // =========================================================================================
-	  int AdaEscapeInternal(const char* src, int src_len, char* dest,
-				int dest_len) {
-	    const char* src_end = src + src_len;
-	    int used = 0;
-
-	    for (; src < src_end; src++) {
-	      if (dest_len - used < 30) // Need extra space for special characters
-		return -1;
-
-	      if (*src == '\"') {
-		dest[used++] = '\"';
-		dest[used++] = '\"';
-	      } else {
-		if (static_cast<uint8> (*src) < 0x80 && !isprint(*src)) {
-		  sprintf(dest + used, "\" & Character'Val (16#%02x#) & \"",
-			  static_cast<uint8> (*src));
-		  used += 30;
-		} else {
-		  dest[used++] = *src;
-		}
-	      }
-	    }
-
-	    if (dest_len - used < 1) // make sure that there is room for \0
-	      return -1;
-
-	    dest[used] = '\0'; // doesn't count towards return value though
-	    return used;
 	  }
 
 	  // =========================================================================================
@@ -212,11 +182,7 @@ namespace google {
 	  bool safe_strtof(const char* str, float* value) {
 	    char* endptr;
 	    errno = 0; // errno only gets set on errors
-#if defined(_WIN32) || defined (__hpux)  // has no strtof()
-	    *value = strtod(str, &endptr);
-#else
 	    *value = strtof(str, &endptr);
-#endif
 	    return *str != 0 && *endptr == 0 && errno == 0;
 	  }
 
@@ -317,16 +283,24 @@ namespace google {
 	  // -----------------------------------------------------------------------------
 
 
-	// } // namespace
+	} // namespace
 
 	// Escape non-printing characters.
 	string AdaEscape(const string& src) {
-	  const int dest_length = src.size() * 30 + 1; // Maximum possible expansion
-	  scoped_array<char> dest(new char[dest_length]);
-	  const int len = AdaEscapeInternal(src.data(), src.size(),
-					    dest.get(), dest_length);
-	  GOOGLE_DCHECK_GE(len, 0);
-	  return string(dest.get(), len);
+	  std::string ret;
+	  for (const char& c : src) {
+	    if (c == '\"') {
+	      ret.append("\"");
+	      ret.append("\"");
+	    } else if (static_cast<uint8> (c) < 0x80 && !isprint(c)) {
+	      ret.append("\" & Character'Val (");
+	      ret.append(std::to_string(c));
+	      ret.append(") & \"");
+	    } else {
+	      ret.append(c,1);
+	    }
+	  }
+	  return ret;
 	}
 
 	// Get the (unqualified) name that should be used for this field in Ada code.
@@ -374,7 +348,8 @@ namespace google {
 	}
 
 	FieldDescriptor::Type GetType(const FieldDescriptor* field) {
-	  return field->type();
+	  return FieldDescriptor::TYPE_INT32; // <PATCH>
+	  // return field->type();
 	}
 
 	AdaType GetAdaType(const FieldDescriptor* field) {
@@ -429,8 +404,7 @@ namespace google {
 		} else if (value != value) {
 		  return "Google.Protobuf.Generated_Message_Utilities.NaN";
 		} else {
-		  return "Google.Protobuf.Wire_Format.PB_Double (" +
-		  SimpleDtoaDecimal(value) + ")";
+		  return "Google.Protobuf.Wire_Format.PB_Double (" + SimpleDtoaDecimal(value) + ")";
 		}
 	      }
 	    case FieldDescriptor::CPPTYPE_FLOAT:

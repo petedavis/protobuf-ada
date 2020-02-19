@@ -2,6 +2,7 @@
 
 project:=protoc_ada.gpr
 
+all: build test
 build:protoc_ada.gpr
 	${GPRBUILD} -p -P ${project}
 
@@ -24,5 +25,5 @@ gps:  # <IGNORE>
 test:
 	@rm -rf out *.txt
 	@mkdir out
-#	@protoc test.proto --python_out=out
+	protoc test.proto --python_out=out
 	strace -o trace -f protoc -I ${CURDIR} test.proto --ada_out=out

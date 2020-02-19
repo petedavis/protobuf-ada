@@ -7,13 +7,6 @@
 #include <ada_generator.h>
 using namespace std;
 
-static void _Trace(char *s){
-  ofstream outfile;
-  outfile.open(s);
-  outfile << "Trace " <<s << endl;
-  outfile.close();
-
-}
 
 
 int main(int argc, char* argv[]) {
@@ -23,7 +16,7 @@ int main(int argc, char* argv[]) {
   std::string invocation_basename = invocation_name.substr(invocation_name.find_last_of("/") + 1);
   const std::string legacy_name = "protoc-gen-ada";
 
-  google::protobuf::compiler::ada::AdaGenerator ada_generator;
+  google::protobuf::compiler::ada::AdaGenerator *ada_generator = new google::protobuf::compiler::ada::AdaGenerator();
 
   ofstream outfile;
   outfile.open("Trace.txt");
@@ -45,6 +38,5 @@ int main(int argc, char* argv[]) {
 //    return cli.Run(argc, argv);
     //  _tracer("7.txt");
 //  };
-  _Trace("8.txt");
-  return google::protobuf::compiler::PluginMain(argc, argv, &ada_generator);
+  return google::protobuf::compiler::PluginMain(argc, argv, ada_generator);
 }

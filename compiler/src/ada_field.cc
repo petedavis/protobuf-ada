@@ -31,17 +31,20 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
+
+#include <ada_primitive_field.h>
 #include <ada_enum_field.h>
-#include <ada_field.h>
 #include <ada_message_field.h>
 #include <ada_string_field.h>
+#include <ada_field.h>
 #include <ada_helpers.h>
-#include <ada_primitive_field.h>
-
+#include <google/protobuf/wire_format.h>
+#include <google/protobuf/stubs/strutil.h>
 namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
+	using namespace std;
 
 	// =========================================================================================
 	void SetCommonFieldVariables(const FieldDescriptor* descriptor,
@@ -50,8 +53,8 @@ namespace google {
 	  (*variables)["index"] = SimpleItoa(descriptor->index());
 	  (*variables)["number"] = SimpleItoa(descriptor->number());
 	  (*variables)["packagename"] = AdaPackageName(FieldScope(descriptor));
-	  (*variables)["declared_type"] = DeclaredTypePrimitiveOperationName(descriptor->type());
-	  (*variables)["tag_size"] = SimpleItoa(internal::WireFormat::TagSize(descriptor->number(), descriptor->type()));
+	  // (*variables)["declared_type"] = DeclaredTypePrimitiveOperationName(descriptor->type()); <PATCH>
+	  // (*variables)["tag_size"] = SimpleItoa(internal::WireFormat::TagSize(descriptor->number(), descriptor->type())); <PATCH>
 	}
 
 	// =========================================================================================
@@ -61,7 +64,7 @@ namespace google {
 	// =========================================================================================
 	FieldGeneratorMap::FieldGeneratorMap(const Descriptor* descriptor)
 	: descriptor_(descriptor),
-	field_generators_(new scoped_ptr<FieldGenerator>[descriptor->field_count()]) {
+	field_generators_(new std::shared_ptr<FieldGenerator>[descriptor->field_count()]) {
 	  // Construct all the FieldGenerators.
 	  for (int i = 0; i < descriptor->field_count(); i++) {
 	    field_generators_[i].reset(MakeGenerator(descriptor->field(i)));
@@ -75,7 +78,8 @@ namespace google {
 	  //     overridden.
 	  //   - This FieldGenerator doesn't support packing, and this method should
 	  //     never have been called.
-	  GOOGLE_LOG(FATAL) << "GenerateMergeFromCodedStreamWithPacking() "
+	  GOOGLE_LOG(FATAL)
+	  << "GenerateMergeFromCodedStreamWithPacking() "
 	  << "called on field generator that does not support packing.";
 
 	}

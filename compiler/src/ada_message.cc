@@ -32,22 +32,27 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
-#include <algorithm>
+#include <google/protobuf/stubs/hash.h>
 #include <ada_message.h>
+#include <ada_enum.h>
+#include <google/protobuf/io/printer.h>
+#include <google/protobuf/stubs/strutil.h>
+#include <google/protobuf/wire_format.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/descriptor.pb.h>
 
+#include <ada_helpers.h>
+#include <algorithm>
 namespace google {
   namespace protobuf {
     namespace compiler {
       namespace ada {
-
+	using namespace std;
 	namespace {
 
-	  struct FieldOrderingByNumber {
-
-	    inline bool operator()(const FieldDescriptor* a,
-				   const FieldDescriptor * b) const {
+	  bool FieldOrderingByNumber (const FieldDescriptor* a,
+ 				      const FieldDescriptor* b) {
 	      return a->number() < b->number();
-	    }
 	  };
 
 	  const char* kWireTypeNames[] = {"VARINT",
@@ -83,7 +88,7 @@ namespace google {
 	  // already_seen is used to avoid checking the same type multiple times
 	  // (and also to protect against recursion).
 	  static bool HasRequiredFields(const Descriptor* type,
-					hash_set<const Descriptor*>* already_seen) {
+					set<const Descriptor*>* already_seen) {
 	    if (already_seen->count(type) > 0) {
 	      // Since the first occurrence of a required field causes the whole
 	      // function to return true, we can assume that if the type is already
@@ -115,21 +120,20 @@ namespace google {
 
 	  // =========================================================================================
 	  static bool HasRequiredFields(const Descriptor* type) {
-	    hash_set<const Descriptor*> already_seen;
+	    set<const Descriptor*> already_seen;
 	    return HasRequiredFields(type, &already_seen);
 	  }
 
 	  // =========================================================================================
 	  // Sort the fields of the given Descriptor by number into a new[]'d array
 	  // and return it.
-	  const FieldDescriptor** SortFieldsByNumber(const Descriptor* descriptor) {
-	    const FieldDescriptor** fields =
-	    new const FieldDescriptor*[descriptor->field_count()];
+	  const std::vector<const FieldDescriptor*> SortFieldsByNumber(const Descriptor* descriptor) {
+	    // const FieldDescriptor** fields = new const FieldDescriptor*[descriptor->field_count()];
+	    std::vector<const FieldDescriptor*> fields;
 	    for (int i = 0; i < descriptor->field_count(); i++) {
-	      fields[i] = descriptor->field(i);
+	      fields.push_back(descriptor->field(i));
 	    }
-	    std::sort(fields, fields + descriptor->field_count(),
-		      FieldOrderingByNumber());
+	    std::sort(fields.begin(),fields.end(),FieldOrderingByNumber);
 	    return fields;
 	  }
 
@@ -326,7 +330,7 @@ namespace google {
 	  }
 
 	  if (descriptor_->enum_type_count() > 0) {
-	    printer->Print(vars,"\n");
+	    printer->Print(vars, "\n");
 	  }
 
 	  printer->Print(vars,
@@ -747,9 +751,9 @@ namespace google {
 
 	// ===============================================================================================
 	void MessageGenerator::GenerateByteSize(io::Printer * printer) {
+	  // TODO: change return type?
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
-	  // TODO: change return type?
 	  printer->Print(vars,"function Byte_Size (The_Message : in out $package$.Instance) return Google.Protobuf.Wire_Format.PB_Object_Size is\n"
 			 "   Total_Size : Google.Protobuf.Wire_Format.PB_Object_Size := 0;\n"
 			 "begin\n");
@@ -768,16 +772,16 @@ namespace google {
 		    printer->Outdent();
 		    printer->Print(vars, "end if;\n");
 		  }
-		  vars["index"] = SimpleItoa(field->index());
-		  printer->Print(vars, "if (The_Message.Has_Bits ($index$ / 32) and "
+		  vars["index"]= SimpleItoa(field->index());
+		  printer->Print(vars,"if (The_Message.Has_Bits ($index$ / 32) and "
 				 "Google.Protobuf.Wire_Format.Shift_Left (16#FF#, $index$ mod 32)) /= 0 then\n");
 		  printer->Indent();
 		}
 	      last_index = i;
 
 	      PrintFieldComment(printer, field);
-	      vars["name"] = FieldName(field);
 
+              vars["name"]= FieldName(field);
 	      printer->Print(vars, "if The_Message.Has_$name$ then\n");
 	      printer->Indent();
 
@@ -804,40 +808,40 @@ namespace google {
 
 	      PrintFieldComment(printer, field);
 	      field_generators_.get(field).GenerateByteSize(printer);
-	      printer->Print(vars,"\n");
+	      printer->Print(vars, "\n");
 	    }
 	  }
 
-	  printer->Print(vars, "The_Message.Cached_Size := Total_Size;\n"
+	  printer->Print(vars,
+			 "The_Message.Cached_Size := Total_Size;\n"
 			 "return Total_Size;\n");
 	  printer->Outdent();
-	  printer->Print(vars,"end Byte_Size;\n\n");
+	  printer->Print(vars,
+			 "end Byte_Size;\n\n");
 	}
 
 	// ===============================================================================================
 	void MessageGenerator::GenerateGetCachedSize(io::Printer * printer) {
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
-	  // TODO: change return type?
 
+	  // TODO: change return type?
 	  printer->Print(vars,
 			 "function Get_Cached_Size\n"
 			 "   (The_Message : in $package$.Instance) return Google.Protobuf.Wire_Format.PB_Object_Size is\n"
 			 "begin\n"
 			 "   return The_Message.Cached_Size;\n"
-			 "end Get_Cached_Size;\n"
-			 "\n");
+			 "end Get_Cached_Size;\n\n");
 	}
 
 	// ===============================================================================================
 	void MessageGenerator::GenerateSerializeWithCachedSizes(io::Printer * printer) {
+	  //TODO: implement handling of extensions.
+	std::vector<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
-	  //TODO: implement handling of extensions.
-
-	  scoped_array<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
-
-	  printer->Print(vars,"procedure Serialize_With_Cached_Sizes\n"
+	  printer->Print(vars,
+			 "procedure Serialize_With_Cached_Sizes\n"
 			 "   (The_Message   : in $package$.Instance;\n"
 			 "    The_Coded_Output_Stream : in Google.Protobuf.IO.Coded_Output_Stream.Instance) is\n"
 			 "begin\n");
@@ -862,10 +866,10 @@ namespace google {
 	  // TODO: Return value indicating success or failure
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
-	  printer->Print(vars,"procedure Merge_Partial_From_Coded_Input_Stream\n"
+	  printer->Print(vars,
+			 "procedure Merge_Partial_From_Coded_Input_Stream\n"
 			 "   (The_Message   : in out $package$.Instance;\n"
-			 "    The_Coded_Input_Stream : in out Google.Protobuf.IO.Coded_Input_Stream.Instance) is\n"
-			 "\n"
+			 "    The_Coded_Input_Stream : in out Google.Protobuf.IO.Coded_Input_Stream.Instance) is\n\n"
 			 "   Tag : Google.Protobuf.Wire_Format.PB_UInt32;\n"
 			 "begin\n");
 	  printer->Indent();
@@ -882,22 +886,25 @@ namespace google {
 	    printer->Print(vars,
 			   "case Google.Protobuf.Wire_Format.Get_Tag_Field_Number (Tag) is\n");
 
-	    scoped_array<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
+	    std::vector<const FieldDescriptor*> ordered_fields(SortFieldsByNumber(descriptor_));
 
 	    for (int i = 0; i < descriptor_->field_count(); i++) {
 	      const FieldDescriptor* field = ordered_fields[i];
 
 	      PrintFieldComment(printer, field);
-	      vars["number"]= SimpleItoa(field->number());
-	      printer->Print(vars,"when $number$ =>\n");
+
+              vars["number"] = SimpleItoa(field->number());
+	      printer->Print(vars, "when $number$ =>\n");
 	      printer->Indent();
 	      const FieldGenerator& field_generator = field_generators_.get(field);
 
 	      // Emit code to parse the common, expected case.
-	      printer->Print(vars, "if Google.Protobuf.Wire_Format.Get_Tag_Wire_Type (Tag) =\n");
+	      printer->Print(vars,
+			     "if Google.Protobuf.Wire_Format.Get_Tag_Wire_Type (Tag) =\n");
 	      printer->Indent();
-	      vars["wiretype"]= kWireTypeNames[internal::WireFormat::WireTypeForField(field)];
-	      printer->Print(vars, "Google.Protobuf.Wire_Format.$wiretype$ then\n");
+	      vars["wiretype"] = kWireTypeNames[internal::WireFormat::WireTypeForField(field)];
+	      printer->Print(vars,
+			     "Google.Protobuf.Wire_Format.$wiretype$ then\n");
 
 	      // TODO: consider implementing optimization ExpectTag from C++
 	      //       implementation if possible ...
@@ -909,18 +916,19 @@ namespace google {
 	      }
 
 	      printer->Outdent();
-	      printer->Print(vars,"end if;\n");
+	      printer->Print(vars, "end if;\n");
 	      printer->Outdent();
 	    }
 
+	    printer->Print(vars, "when others =>\n");
+	    printer->Indent();
 	    printer->Print(vars,
-			   "when others =>\n"
-			   "   declare\n"
-			   "      Dummy : Google.Protobuf.Wire_Format.PB_Bool with Unreferenced;\n"
-			   "   begin\n"
-			   "      Dummy := The_Coded_Input_Stream.Skip_Field (Tag);\n"
-			   "      return;\n"
-			   "   end;\n");
+			   "declare\n"
+			   "   Dummy : Google.Protobuf.Wire_Format.PB_Bool with Unreferenced;\n"
+			   "begin\n"
+			   "   Dummy := The_Coded_Input_Stream.Skip_Field (Tag);\n"
+			   "   return;\n"
+			   "end;\n");
 	    printer->Outdent();
 
 	    printer->Print(vars,
@@ -1001,9 +1009,8 @@ namespace google {
 	// ===============================================================================================
 	void MessageGenerator::GenerateTaggedType(io::Printer * printer) {
 	  map<string, string> vars;
-	  vars["package"] = ada_package_name_;
-	  vars["field_count"] = SimpleItoa(descriptor_->field_count());
-	  printer->Print(vars, "type Instance is new Google.Protobuf.Message.Instance with record\n");
+	  printer->Print(vars,
+			 "type Instance is new Google.Protobuf.Message.Instance with record\n");
 	  printer->Indent();
 
 	  // Add component(s) to record if message has at least one field.
@@ -1015,6 +1022,7 @@ namespace google {
 
 	  // TODO: change name to avoid name collisions, consider changing type of
 	  // Has_Bits and the same goes for Cached_Size.
+	  vars["field_count"] = SimpleItoa(descriptor_->field_count());
 	  printer->Print(vars,
 			 "Has_Bits : Google.Protobuf.Wire_Format.Has_Bits_Array_Type (0 .. ($field_count$ + 31) / 32) := (others => 0);\n"
 			 "Cached_Size : Google.Protobuf.Wire_Format.PB_Object_Size := 0;\n");
@@ -1025,12 +1033,11 @@ namespace google {
 	// ===============================================================================================
 	void MessageGenerator::GenerateSerializeOneField(io::Printer* printer, const FieldDescriptor * field) {
 	  map<string, string> vars;
-	  vars["package"] = ada_package_name_;
-	  vars["name"]= FieldName(field);
 	  PrintFieldComment(printer, field);
 
 	  if (!field->is_repeated()) {
-	    printer->Print(vars,"if The_Message.Has_$name$ then\n");
+  	    vars["name"] = FieldName(field);
+	    printer->Print(vars, "if The_Message.Has_$name$ then\n");
 	    printer->Indent();
 	  }
 
@@ -1039,7 +1046,7 @@ namespace google {
 	  if (!field->is_repeated()) {
 
 	    printer->Outdent();
-	    printer->Print(vars,"end if;\n");
+	    printer->Print(vars, "end if;\n");
 	  }
 	}
 
@@ -1047,6 +1054,7 @@ namespace google {
 	void MessageGenerator::GenerateFinalize(io::Printer * printer) {
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
+
 	  printer->Print(vars,
 			 "overriding\n"
 			 "procedure Finalize (The_Message : in out $package$.Instance) is\n"

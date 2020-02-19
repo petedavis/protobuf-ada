@@ -1,0 +1,15 @@
+--  ====================================================================
+--
+--  Note the intent of this file is to set the "rpath" in the executable
+--  to force it to use the correct libstdc++.
+--  if this file is´nt used, theb he code will compile and link but
+--  use the default libstdc++ wich may be erronous.
+--
+--  ====================================================================
+
+library project libstdcpp is
+   for Library_Name use "stdc++";
+   for Library_Kind use "dynamic";
+   for Externally_Built use "True";
+   for Library_Dir use "../../lib64";
+end libstdcpp;

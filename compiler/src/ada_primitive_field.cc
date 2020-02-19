@@ -33,6 +33,13 @@
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
 #include <ada_primitive_field.h>
+#include <ada_helpers.h>
+#include <google/protobuf/io/printer.h>
+#include <google/protobuf/wire_format.h>
+#include <google/protobuf/stubs/strutil.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/descriptor.pb.h>
+#include "ada_enum_field.h"
 
 namespace google {
   namespace protobuf {
@@ -113,10 +120,11 @@ namespace google {
 	    (*variables)["default"] = DefaultValue(descriptor);
 	    (*variables)["tag"] = SimpleItoa(internal::WireFormat::MakeTag(descriptor));
 
-	    	    int fixed_size = FixedSize(descriptor->type());
-	    if (fixed_size != -1) {
-	      (*variables)["fixed_size"] = SimpleItoa(fixed_size);
-	    }
+	    // <PATCH>
+	    /* 	    int fixed_size = FixedSize(descriptor->type()); */
+/* 	    if (fixed_size != -1) { */
+/* 	      (*variables)["fixed_size"] = SimpleItoa(fixed_size); */
+/* 	    } */
 	  }
 
 	} // namespace
@@ -296,7 +304,7 @@ namespace google {
 	  printer->Print(variables_, "declare\n");
 	  printer->Print(variables_, "   Data_Size : Google.Protobuf.Wire_Format.PB_Object_Size := 0;\n");
 	  printer->Print(variables_, "begin\n");
-	  int fixed_size = FixedSize(descriptor_->type());
+	  int fixed_size = 0 ; // <PATCH> FixedSize(descriptor_->type());
 	  if (fixed_size == -1) {
 	    printer->Print(variables_, "   for E of The_Message.$name$ loop\n");
 	    printer->Print(variables_, "      Data_Size := Data_Size +  Google.Protobuf.IO.Coded_Output_Stream.Compute_$declared_type$_Size_No_Tag (E);\n");

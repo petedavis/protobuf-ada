@@ -33,3 +33,4 @@ w.py
 protobuff*
 default.gpr
 _test_
+*.orig

@@ -31,30 +31,28 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
-#pragma once
 
 #ifndef GOOGLE_PROTOBUF_COMPILER_ADA_FIELD_H__
 #define GOOGLE_PROTOBUF_COMPILER_ADA_FIELD_H__
+
+#include <map>
+#include <string>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/io/printer.h>
-#include <google/protobuf/wire_format.h>
-#include <map>
-#include <string>
-#undef  PROTOBUF_DEPRECATED
-#include "google/protobuf/port_def.inc"
 
 namespace google {
 
   namespace protobuf {
     namespace compiler {
       namespace ada {
+	using namespace std;
 
 	// Helper function: set variables in the map that are the same for all
 	// field code generators.
 	// ['name', 'index', 'number', 'packagename', 'declared_type', 'tag_size'].
 	void SetCommonFieldVariables(const FieldDescriptor* descriptor,
-				     map<string, string>* variables);
+				     std::map<string, string>* variables);
 
 	class FieldGenerator {
 	  public:
@@ -128,7 +126,7 @@ namespace google {
 
 	  private:
 	  const Descriptor* descriptor_;
-	  scoped_array<scoped_ptr<FieldGenerator> > field_generators_;
+	  std::vector<unique_ptr<FieldGenerator> > field_generators_;
 
 	  static FieldGenerator* MakeGenerator(const FieldDescriptor* field);
 
@@ -139,5 +137,5 @@ namespace google {
     } // namespace compiler
   } // namespace protobuf
 } // namespace google
-#include "google/protobuf/port_undef.inc"
+
 #endif // GOOGLE_PROTOBUF_COMPILER_ADA_FIELD_H__
