@@ -34,3 +34,6 @@ protobuff*
 default.gpr
 _test_
 *.orig
+Trace.txt
+8.txt
+
