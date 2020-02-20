@@ -1,3 +1,5 @@
+-- The intent of this project is only to get easy access
+-- to the protc header files when using GNATStudio.
 project Protobuf_Cpp is
    for Languages use ("C++");
 
