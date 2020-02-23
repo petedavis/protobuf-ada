@@ -15,8 +15,16 @@ project Protobuf_Cpp is
    for Source_Dirs use project'Source_Dirs & (PROTOBUF_INCLUDE & "util");
 
    for Externally_Built use "True";
+
    package Naming is
       for Spec_Suffix ("c++") use ".h";
       for Body_Suffix ("c++") use ".cc";
    end Naming;
-end Protobuf_Cpp;
+
+   package Linker is
+      for Linker_Options use ("-l" & "protobuf",
+                              "-l" & "protoc",
+                              "-l" & "c",
+                              "-l" & "m",
+                              "-l" & "z");
+   end Linker;end Protobuf_Cpp;
