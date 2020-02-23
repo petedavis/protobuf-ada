@@ -68,7 +68,8 @@ namespace google {
 	  // print group bodies so we cut off after the first line.
 	  void PrintFieldComment(io::Printer* printer, const FieldDescriptor* field) {
 	    std::map<std::string, std::string> vars;
-	    string def = field->DebugString();
+	    // string def = field->DebugString();
+	    string def = field->full_name();
 	    vars["def"] = def.substr(0, def.find_first_of('\n'));
 	    printer->Print(vars,"-- $def$\n");
 	  }
