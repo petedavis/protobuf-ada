@@ -102,12 +102,11 @@ namespace google {
 	// =========================================================================================
 	void EnumFieldGenerator::GenerateAccessorDeclarations(io::Printer* printer) const {
 	  // Generate declaration Get_$name$
-	  printer->Print(variables_,"function Get_$name$ (The_Message : in $packagename$.Instance) return $type$;\n");
-
-	  // Generate declaration Set_$name$
-	  printer->Print(variables_, "procedure Set_$name$\n");
-	  printer->Print(variables_, "   (The_Message : in out $packagename$.Instance;\n");
-	  printer->Print(variables_, "    Value       : in $type$);\n");
+	  printer->Print(variables_,
+			 "function Get_$name$ (The_Message : in $packagename$.Instance) return $type$;\n"
+			 "procedure Set_$name$\n"
+			 "   (The_Message : in out $packagename$.Instance;\n"
+			 "    Value       : in $type$);\n");
 	}
 
 	// =========================================================================================

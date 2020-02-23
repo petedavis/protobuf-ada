@@ -111,8 +111,9 @@ namespace google {
 	  }
 	  printer->Print(vars,");\n");
           vars["name"] = EnumTypeName(descriptor_, false);
-	  printer->Print(vars,"function Enumeration_To_PB_Int32 is new Ada.Unchecked_Conversion ($name$, Google.Protobuf.Wire_Format.PB_Int32);\n");
-	  printer->Print(vars,"function PB_Int32_To_Enumeration is new Ada.Unchecked_Conversion (Google.Protobuf.Wire_Format.PB_Int32, $name$);\n");
+	  printer->Print(vars,
+			 "function Enumeration_To_PB_Int32 is new Ada.Unchecked_Conversion ($name$, Google.Protobuf.Wire_Format.PB_Int32);\n"
+			 "function PB_Int32_To_Enumeration is new Ada.Unchecked_Conversion (Google.Protobuf.Wire_Format.PB_Int32, $name$);\n");
 	}
 
 

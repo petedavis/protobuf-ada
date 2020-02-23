@@ -724,7 +724,8 @@ namespace google {
 		  printer->Print(vars,"end if;\n");
 		}
 		vars["index"]= SimpleItoa(field->index());
-		printer->Print(vars,"if (From.Has_Bits ($index$ / 32) and Google.Protobuf.Wire_Format.Shift_Left (16#FF#, $index$ mod 32)) /= 0 then\n");
+		printer->Print(vars,
+			       "if (From.Has_Bits ($index$ / 32) and Google.Protobuf.Wire_Format.Shift_Left (16#FF#, $index$ mod 32)) /= 0 then\n");
 		printer->Indent();
 	      }
 
@@ -756,7 +757,8 @@ namespace google {
 	  // TODO: change return type?
 	  map<string, string> vars;
 	  vars["package"] = ada_package_name_;
-	  printer->Print(vars,"function Byte_Size (The_Message : in out $package$.Instance) return Google.Protobuf.Wire_Format.PB_Object_Size is\n"
+	  printer->Print(vars,
+			 "function Byte_Size (The_Message : in out $package$.Instance) return Google.Protobuf.Wire_Format.PB_Object_Size is\n"
 			 "   Total_Size : Google.Protobuf.Wire_Format.PB_Object_Size := 0;\n"
 			 "begin\n");
 	  printer->Indent();
@@ -775,7 +777,8 @@ namespace google {
 		    printer->Print(vars, "end if;\n");
 		  }
 		  vars["index"]= SimpleItoa(field->index());
-		  printer->Print(vars,"if (The_Message.Has_Bits ($index$ / 32) and "
+		  printer->Print(vars,
+				 "if (The_Message.Has_Bits ($index$ / 32) and "
 				 "Google.Protobuf.Wire_Format.Shift_Left (16#FF#, $index$ mod 32)) /= 0 then\n");
 		  printer->Indent();
 		}
@@ -784,19 +787,22 @@ namespace google {
 	      PrintFieldComment(printer, field);
 
               vars["name"]= FieldName(field);
-	      printer->Print(vars, "if The_Message.Has_$name$ then\n");
+	      printer->Print(vars,
+			     "if The_Message.Has_$name$ then\n");
 	      printer->Indent();
 
 	      field_generators_.get(field).GenerateByteSize(printer);
 
 	      printer->Outdent();
-	      printer->Print(vars, "end if;\n");
+	      printer->Print(vars,
+			     "end if;\n");
 	    }
 	  }
 
 	  if (last_index >= 0) {
 	    printer->Outdent();
-	    printer->Print(vars, "end if;\n");
+	    printer->Print(vars,
+			   "end if;\n");
 	  }
 
 	  // TODO: implement Byte_Size for extensions and (unknown fields)?
@@ -952,14 +958,17 @@ namespace google {
 	void MessageGenerator::GenerateFieldAccessorDefinitionSize(const map<string, string>* variables,
 								   io::Printer * printer) {
 
-	  printer->Print((*variables),"function $name$_Size\n");
-	  printer->Print((*variables),"   (The_Message : in $packagename$.Instance) return Google.Protobuf.Wire_Format.PB_Object_Size is\n");
-	  printer->Print((*variables),"begin\n");
+	  printer->Print((*variables),
+			 "function $name$_Size\n"
+			 "   (The_Message : in $packagename$.Instance) return Google.Protobuf.Wire_Format.PB_Object_Size is\n"
+			 "begin\n");
 
 	  // Body
 	  // TODO: remove type conversion ...
-	  printer->Print((*variables),"   return Google.Protobuf.Wire_Format.PB_Object_Size (The_Message.$name$.Length);\n");
-	  printer->Print((*variables),"end $name$_Size;\n\n");
+	  printer->Print((*variables),
+			 "   return Google.Protobuf.Wire_Format.PB_Object_Size (The_Message.$name$.Length);\n"
+			 "end $name$_Size;\n"
+			 "\n");
 	}
 
 	// ===============================================================================================
@@ -967,11 +976,13 @@ namespace google {
 								  io::Printer * printer) {
 	  // Generate Has_$name$
 
-	  printer->Print((*variables),"function Has_$name$\n");
-	  printer->Print((*variables),"   (The_Message : in $packagename$.Instance) return Boolean is\n");
-	  printer->Print((*variables),"begin\n");
-	  printer->Print((*variables),"   return (The_Message.Has_Bits($has_array_index$) and 16#$has_mask$#) /= 0;\n");
-	  printer->Print((*variables),"end Has_$name$;\n\n");
+	  printer->Print((*variables),
+			 "function Has_$name$\n"
+			 "   (The_Message : in $packagename$.Instance) return Boolean is\n"
+			 "begin\n"
+			 "   return (The_Message.Has_Bits($has_array_index$) and 16#$has_mask$#) /= 0;\n"
+			 "end Has_$name$;\n"
+			 "\n");
 
 	  // Generate Set_Has_$name$
 	  printer->Print((*variables),"procedure Set_Has_$name$\n");
