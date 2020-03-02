@@ -39,11 +39,11 @@ namespace google {
     namespace compiler {
       namespace ada {
 
-	// =========================================================================================
-	ExtensionGenerator::ExtensionGenerator(const FieldDescriptor* descriptor) { }
+        // =========================================================================================
+        ExtensionGenerator::ExtensionGenerator(const FieldDescriptor* descriptor) { }
 
-	// =========================================================================================
-	ExtensionGenerator::~ExtensionGenerator() { }
+        // =========================================================================================
+        ExtensionGenerator::~ExtensionGenerator() { }
 
 
       } // namespace ada

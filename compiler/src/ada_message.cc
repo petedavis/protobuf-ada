@@ -982,21 +982,21 @@ namespace google {
 			 "begin\n"
 			 "   return (The_Message.Has_Bits($has_array_index$) and 16#$has_mask$#) /= 0;\n"
 			 "end Has_$name$;\n"
+			 "\n"
+			 "\n"
+			 "procedure Set_Has_$name$\n"
+			 "   (The_Message : in out $packagename$.Instance) is\n"
+			 "begin\n"
+			 "   The_Message.Has_Bits($has_array_index$) := The_Message.Has_Bits($has_array_index$) or 16#$has_mask$#;\n"
+			 "end Set_Has_$name$;\n"
+			 "\n"
+			 "\n"
+			 "procedure Clear_Has_$name$\n"
+			 "   (The_Message : in out $packagename$.Instance) is\n"
+			 "begin\n"
+			 "   The_Message.Has_Bits($has_array_index$) := The_Message.Has_Bits($has_array_index$) and (not 16#$has_mask$#);\n"
+			 "end Clear_Has_$name$;\n"
 			 "\n");
-
-	  // Generate Set_Has_$name$
-	  printer->Print((*variables),"procedure Set_Has_$name$\n");
-	  printer->Print((*variables),"   (The_Message : in out $packagename$.Instance) is\n");
-	  printer->Print((*variables),"begin\n");
-	  printer->Print((*variables),"   The_Message.Has_Bits($has_array_index$) := The_Message.Has_Bits($has_array_index$) or 16#$has_mask$#;\n");
-	  printer->Print((*variables),"end Set_Has_$name$;\n\n");
-
-	  // Generate Clear_Has_$name$
-	  printer->Print((*variables),"procedure Clear_Has_$name$\n");
-	  printer->Print((*variables),"   (The_Message : in out $packagename$.Instance) is\n");
-	  printer->Print((*variables),"begin\n");
-	  printer->Print((*variables),"   The_Message.Has_Bits($has_array_index$) := The_Message.Has_Bits($has_array_index$) and (not 16#$has_mask$#);\n");
-	  printer->Print((*variables),"end Clear_Has_$name$;\n\n");
 	}
 
 	// ===============================================================================================
@@ -1004,19 +1004,22 @@ namespace google {
 								    const FieldDescriptor* field,
 								    io::Printer * printer) {
 
-	  printer->Print((*variables), "procedure Clear_$name$\n");
-	  printer->Print((*variables), "   (The_Message : in out $packagename$.Instance) is\n");
-	  printer->Print((*variables),"begin\n");
+	  printer->Print((*variables),
+			 "procedure Clear_$name$\n"
+			 "   (The_Message : in out $packagename$.Instance) is\n"
+			 "begin\n");
 	  printer->Indent();
 
 	  // Body
 	  field_generators_.get(field).GenerateClearingCode(printer);
 
 	  if (!field->is_repeated()) {
-	    printer->Print((*variables),"The_Message.Clear_Has_$name$;\n");
+	    printer->Print((*variables),
+			   "The_Message.Clear_Has_$name$;\n");
 	  }
 	  printer->Outdent();
-	  printer->Print((*variables),"end Clear_$name$;\n\n");
+	  printer->Print((*variables),
+			 "end Clear_$name$;\n\n");
 	}
 
 	// ===============================================================================================
@@ -1040,7 +1043,8 @@ namespace google {
 			 "Has_Bits : Google.Protobuf.Wire_Format.Has_Bits_Array_Type (0 .. ($field_count$ + 31) / 32) := (others => 0);\n"
 			 "Cached_Size : Google.Protobuf.Wire_Format.PB_Object_Size := 0;\n");
 	  printer->Outdent();
-	  printer->Print(vars, "end record;\n\n");
+	  printer->Print(vars,
+			 "end record;\n\n");
 	}
 
 	// ===============================================================================================
@@ -1050,7 +1054,8 @@ namespace google {
 
 	  if (!field->is_repeated()) {
   	    vars["name"] = FieldName(field);
-	    printer->Print(vars, "if The_Message.Has_$name$ then\n");
+	    printer->Print(vars,
+			   "if The_Message.Has_$name$ then\n");
 	    printer->Indent();
 	  }
 
@@ -1059,7 +1064,8 @@ namespace google {
 	  if (!field->is_repeated()) {
 
 	    printer->Outdent();
-	    printer->Print(vars, "end if;\n");
+	    printer->Print(vars,
+			   "end if;\n");
 	  }
 	}
 
@@ -1087,11 +1093,13 @@ namespace google {
 	  }
 
 	  if (!finalization_needed) {
-	    printer->Print(vars, "null;\n");
+	    printer->Print(vars,
+			   "null;\n");
 	  }
 
 	  printer->Outdent();
-	  printer->Print(vars, "end Finalize;\n\n");
+	  printer->Print(vars,
+			 "end Finalize;\n\n");
 	}
 
 
