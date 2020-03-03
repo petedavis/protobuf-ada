@@ -1,5 +1,7 @@
 # See README.txt.
 
+
+include ../Makefile.conf
 .PHONY: all cpp java python clean ada
 ada:
 
@@ -13,7 +15,8 @@ ada:    add_person_ada    list_people_ada
 .protoc_middleman: addressbook.proto Makefile
 	rm -rf src.cpp/gen/* src.java src.ada/gen/*
 	mkdir -p src.cpp/gen src.java src.ada/gen
-	protoc --cpp_out=src.cpp/gen --java_out=src.java --python_out=. --ada_out=src.ada/gen addressbook.proto
+	protoc --cpp_out=src.cpp/gen --java_out=src.java --python_out=. addressbook.proto
+	protoc-gen-ada --ada_out=src.ada/gen addressbook.proto
 	@touch protoc_middleman
 
 add_person.adb:.protoc_middleman

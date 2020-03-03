@@ -7,7 +7,7 @@
 #include <port_def.inc>
 using namespace std;
 
-#define REQIRED_PROTOBUF_VERSION 3007001
+#define REQIRED_PROTOBUF_VERSION 3011004
 
 int main(int argc, char* argv[]) {
   google::protobuf::compiler::CommandLineInterface cli;
