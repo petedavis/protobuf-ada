@@ -46,18 +46,18 @@ namespace google {
     namespace compiler {
       namespace ada {
 
-	class EnumGenerator {
-	  public:
-	  explicit EnumGenerator(const EnumDescriptor* descriptor);
-	  ~EnumGenerator();
+        class EnumGenerator {
+          public:
+          explicit EnumGenerator(const EnumDescriptor* descriptor);
+          ~EnumGenerator();
 
-	  void GenerateDefinition(io::Printer* printer);
+          void GenerateDefinition(io::Printer* printer);
 
-	  private:
-	  const EnumDescriptor* descriptor_;
+          private:
+          const EnumDescriptor* descriptor_;
 
-	  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(EnumGenerator);
-	};
+          GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(EnumGenerator);
+        };
 
       }  // namespace ada
     }  // namespace compiler
