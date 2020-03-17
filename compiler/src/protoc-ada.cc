@@ -7,7 +7,6 @@
 #include <port_def.inc>
 using namespace std;
 
-#define REQIRED_PROTOBUF_VERSION 3011004
 
 int main(int argc, char* argv[]) {
   google::protobuf::compiler::CommandLineInterface cli;
@@ -17,10 +16,7 @@ int main(int argc, char* argv[]) {
 
   const std::string legacy_name = "protoc-gen-ada";
 
-  if (PROTOBUF_VERSION != REQIRED_PROTOBUF_VERSION ){
-    std::cout << "Invalid version expected:" << REQIRED_PROTOBUF_VERSION << " got:" << PROTOBUF_VERSION << "\n";
-    return -1;
-  }
+
 
 
   google::protobuf::compiler::ada::AdaGenerator *ada_generator = new google::protobuf::compiler::ada::AdaGenerator();
